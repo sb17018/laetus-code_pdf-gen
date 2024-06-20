@@ -168,21 +168,26 @@ public class PdfCreator {
 			BarCombinationGen barsCombGen = new BarCombinationGen(codeValue, codeType);
 			List<Bar> barsComb = barsCombGen.getBarsCombination();
 			float x = (pageWidth - barsCombGen.getCodeWidth()) * UNIT_CONVERTER / 2;
+			float y = (pageHeight - barsCombGen.getCodeHeight()) * UNIT_CONVERTER / 2;
 				System.out.println(x);
 			for (Bar b : barsComb) {
-				cb.rectangle(x, 170, cMtU(b.getWidth()), cMtU(b.getHeight()));
+				cb.rectangle(x, y, cMtU(b.getWidth()), cUtM(barsCombGen.getCodeHeight()));
 				x += cMtU(b.getWidth() + b.getModule());
 			}
 			cb.fill();
-			final int FONT_SIZE = 48;
-			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+			int fontSize = 24;
+			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 			cb.beginText();
-//			for(int i : bf.getWidths()) {
-//				System.out.println(i);
-//			}
-			cb.setFontAndSize(bf, FONT_SIZE);
-			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(String.valueOf(codeValue), FONT_SIZE)) / 2, 40);
-//			System.out.println("Length of text = " + cU(bf.getWidthPoint(String.valueOf(codeValue), 72)/2));
+			cb.setFontAndSize(bf, fontSize);
+			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(codeType.name(), fontSize)) / 2, 220);
+			cb.showText(codeType.name());
+			cb.endText();
+			
+			fontSize = 48;
+			bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+			cb.beginText();
+			cb.setFontAndSize(bf, fontSize);
+			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(String.valueOf(codeValue), fontSize)) / 2, 40);
 			cb.showText(String.valueOf(codeValue));
 			cb.endText();
 			cb.restoreState();

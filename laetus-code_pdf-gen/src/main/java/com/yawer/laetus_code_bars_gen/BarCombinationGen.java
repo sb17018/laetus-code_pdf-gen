@@ -8,6 +8,7 @@ public class BarCombinationGen {
 	final int MAX_VALUE = 131070;
 
 	private float codeWidth;
+	private float codeHeight = 8.0f;
 	private List<Bar> barsCombination;
 
 	public BarCombinationGen(int codeValue, CodeType codeType) {
@@ -37,6 +38,10 @@ public class BarCombinationGen {
 	}
 
 	public float getCodeWidth() {
+		return this.codeWidth;
+	}
+
+	public float getCodeHeight() {
 		return this.codeWidth;
 	}
 
