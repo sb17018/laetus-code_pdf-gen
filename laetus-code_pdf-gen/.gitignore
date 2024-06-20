@@ -34,4 +34,4 @@ build/
 
 
 ###PDFs generated###
-/resources/static/pdfs/
+pdfs/
