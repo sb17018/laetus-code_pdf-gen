@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -22,6 +23,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.CMYKColor;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -49,15 +51,15 @@ import com.yawer.laetus_code_bars_gen.CodeType;
 //import jakarta.servlet.http.HttpServletResponse;
 
 public class PdfCreator {
-	
+
+	private final static float UNIT_CONVERTER = 2.8346456692913385826771653543307f; // 1mm / (1/72) inch
+
 	private static int cMtU(float value) {
-		final float UNIT_CONVERTER = 2.8346456692913385826771653543307f; // 1mm / (1/72) inch
-		return (int)(value * UNIT_CONVERTER);
+		return (int) (value * UNIT_CONVERTER);
 	}
-	
+
 	private static int cUtM(float value) {
-		final float UNIT_CONVERTER = 2.8346456692913385826771653543307f; // 1mm / (1/72) inch
-		return (int)(value / UNIT_CONVERTER);
+		return (int) (value / UNIT_CONVERTER);
 	}
 
 	public static void createPdf(int codeValue, CodeType codeType)
@@ -140,10 +142,12 @@ public class PdfCreator {
 //
 //		document.save("src/main/resources/static/pdfs/Pharmacode_" + codeValue + ".pdf");
 //		document.close();
-		
-		
 
 		Document document = new Document();
+		int pageWidth = 148;
+		int pageHeight = 105;
+		Rectangle pageSize = new Rectangle(pageWidth * UNIT_CONVERTER, pageHeight * UNIT_CONVERTER);
+		document.setPageSize(pageSize);
 		File file = new File("src/main/resources/static/pdfs/Pharmacode_" + codeValue + ".pdf");
 
 		if (!file.exists()) {
@@ -157,27 +161,27 @@ public class PdfCreator {
 //
 //			}
 //			Chunk chunk = new Chunk(String.valueOf(codeValue), font);
-			
-			
 
 			PdfContentByte cb = pdfWriter.getDirectContent();
 			cb.saveState();
 			cb.setColorFill(new CMYKColor(0f, 0f, 0f, 1f));
-			BarCombinationGen barsComb = new BarCombinationGen();
-			int x = 10;
-			for (Bar b : barsComb.generateBarsCombination(codeValue, codeType)) {
-				cb.rectangle(cMtU(x), 400, cMtU(b.getWidth()), cMtU(b.getHeight()));
-				x += b.getWidth() + b.getModule();
+			BarCombinationGen barsCombGen = new BarCombinationGen(codeValue, codeType);
+			List<Bar> barsComb = barsCombGen.getBarsCombination();
+			float x = (pageWidth - barsCombGen.getCodeWidth()) * UNIT_CONVERTER / 2;
+				System.out.println(x);
+			for (Bar b : barsComb) {
+				cb.rectangle(x, 170, cMtU(b.getWidth()), cMtU(b.getHeight()));
+				x += cMtU(b.getWidth() + b.getModule());
 			}
 			cb.fill();
+			final int FONT_SIZE = 48;
 			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 			cb.beginText();
 //			for(int i : bf.getWidths()) {
 //				System.out.println(i);
 //			}
-			cb.setFontAndSize(bf, 72);
-			cb.moveText(cMtU(74) - cUtM(bf.getWidth(String.valueOf(codeValue))/2), 300);
-			System.out.println("bf.getWidth(String.valueOf(codeValue)) = " + bf.getWidth(String.valueOf(codeValue)));
+			cb.setFontAndSize(bf, FONT_SIZE);
+			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(String.valueOf(codeValue), FONT_SIZE)) / 2, 40);
 //			System.out.println("Length of text = " + cU(bf.getWidthPoint(String.valueOf(codeValue), 72)/2));
 			cb.showText(String.valueOf(codeValue));
 			cb.endText();

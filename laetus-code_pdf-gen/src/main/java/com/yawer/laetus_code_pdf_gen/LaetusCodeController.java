@@ -39,7 +39,6 @@ public class LaetusCodeController {
 	    String[] codeParams = typeAndCodeValue.split(regex);
 	    int codeValue = Integer.parseInt(codeParams[1]);
 	    CodeType codeType = CodeType.valueOf(codeParams[0]);
-		System.out.println(new BarCombinationGen().generateBarsCombination(codeValue, codeType));
 		PdfCreator.createPdf(codeValue, codeType);
 //		PdfCreator.createPdf(codeValue, codeType, request, response);
 		System.out.println(codeValue);
