@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #mainColorDisplay {
+            width: 320px;
+            height: 320px;
+        }
+
+        .color-setter, #alfa {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 2px;
+            background: black;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        #alfa{
+            width: 320px;
+            height: 2px;
+             margin-bottom: 10px;
+        }
+
+        .color-setter:hover, #alfa:hover {
+            opacity: 1;
+        }
+
+        .color-setter::-webkit-slider-thumb, #alfa::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 2px #a0a0a0;
+            cursor: pointer;
+        }
+
+        .color-setter::-moz-range-thumb, #alfa::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            margin: 5px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 2px #a0a0a0;
+            cursor: pointer;
+        }
+
+        .color-setter#red::-webkit-slider-thumb {
+            background: red;
+        }
+
+        .color-setter#red::-moz-range-thumb {
+            background: red;
+        }
+
+        .color-setter#green::-webkit-slider-thumb {
+            background: green;
+        }
+
+        .color-setter#green::-moz-range-thumb {
+            background: green;
+        }
+
+        .color-setter#blue::-webkit-slider-thumb {
+            background-color: blue;
+        }
+
+        /* #green::after {
+            content:attr(value);
+        } */
+
+        .color-setter#blue::-moz-range-thumb {
+            background-color: blue;
+        }
+
+        #alfa::-webkit-slider-thumb {
+            background: black;
+        }
+
+        #alfa::-moz-range-thumb {
+            background: black;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="range" name="alfa" id="alfa" class="opacity-setter" value="100" min="0" max="100" step="1"><br/>
+    <div id="mainColorDisplay"></div>
+    <input type="range" name="red" id="red" class="color-setter" value="255" min="0" max="255" step="1">
+    <input type="range" name="green" id="green" class="color-setter" value="255" min="0" max="255" step="1">
+    <input type="range" name="blue" id="blue" class="color-setter" value="255" min="0" max="255" step="1">
+</body>
+
+<script>
+    const MAIN_DISPLAY = document.querySelector("#mainColorDisplay");
+    MAIN_DISPLAY.style.backgroundColor = "rgb(255, 255, 255)";
+
+    const COLOR_SLIDER = document.querySelectorAll(".color-setter");
+    COLOR_SLIDER.forEach(elmt => elmt.addEventListener("input", () => MAIN_DISPLAY.style.backgroundColor = "rgb(" + COLOR_SLIDER[0].value + ", " + COLOR_SLIDER[1].value + ", " + COLOR_SLIDER[2].value + ")"));
+
+    const OPACITY_SETTER = document.querySelector("#alfa");
+    OPACITY_SETTER.addEventListener("input", function(){MAIN_DISPLAY.style.opacity = this.value/100});
+
+</script>
+
+</html>

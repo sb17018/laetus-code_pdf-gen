@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url("img/maserati_Grecale_Modena.png") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+
+        }
+
+        #clock {
+            width: 560px;
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: -150px;
+            font-family: "Lexend Zetta", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            opacity: 0;
+            transition: margin-top 1s, opacity 1s;
+        }
+
+        #clock.loaded {
+            margin-top: calc(50vh - 75px);
+            opacity: 1;
+        }
+
+        output {
+            position: absolute;
+            left: 0;
+            color: white;
+            font-size: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="clock">
+        <output>placeholder</output>
+    </div>
+
+    <script>
+
+        const CLOCK_PANEL = document.querySelector("#clock");
+        // CLOCK_PANEL.addEventListener("DOMContentLoaded", () => CLOCK_PANEL.classList.add("loaded"));
+        setTimeout(() => CLOCK_PANEL.classList.add("loaded"), 100);
+
+        const CLOCK_PLACEHOLDER = document.querySelector("output");
+        function runClock() {
+            CLOCK_PLACEHOLDER.textContent = new Date().toLocaleTimeString();
+        }
+        setInterval(runClock, 1000);
+        runClock();
+    </script>
+
+</body>
+
+</html>

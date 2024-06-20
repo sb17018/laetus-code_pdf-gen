@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #mainPanel{
+            width: 300px;
+            height: 350px;
+            margin: 100px auto;
+        }
+        #mainDisplay{
+            width: 300px;
+            height: 300px;
+            background-color: yellowgreen;
+        }
+        select{
+            width: 100%;
+            font-size: 32px;
+            text-align: center;
+        }
+        .gradient-bar{
+            height: 300px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id="mainPanel">
+    <div id="mainDisplay"></div>
+    <select>
+        <option value="256">256</option>
+        <option value="128">128</option>
+        <option value="64">64</option>
+        <option value="32">32</option>
+        <option value="16">16</option>
+        <option value="8">8</option>
+        <option value="4">4</option>
+        <option value="2">2</option>
+    </select>
+</div>
+
+<script>
+    const MAIN_DISPLAY = document.querySelector("#mainDisplay");
+    const GRADIENT_OPTIONS = document.querySelector("select");
+
+    GRADIENT_OPTIONS.addEventListener("change", function(){MAIN_DISPLAY.innerHTML=""; generateGradient(this.value)});
+
+    function generateGradient(number){
+        MAIN_DISPLAY.appendChild(createBar(0, number));
+        for(let i = 1; i < number - 1; i++){
+            let saturationStep = (256/number)*i;
+            MAIN_DISPLAY.appendChild(createBar(saturationStep, number));
+            console.log(saturationStep);
+        }
+        MAIN_DISPLAY.appendChild(createBar(255, number));
+    }
+
+    function createBar(bkgSaturation, numberOfBars){
+        const newBar = document.createElement("div");
+        newBar.classList.add("gradient-bar");
+        newBar.style.backgroundColor = "rgb(" + bkgSaturation  + ", " + bkgSaturation + ", " + bkgSaturation + ")";
+        newBar.style.width = 300/numberOfBars + "px";
+        return newBar;
+    }
+
+    generateGradient(256);
+    
+</script>
+    
+</body>
+</html>

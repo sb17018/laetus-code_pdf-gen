@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            background-color: midnightblue;
+        }
+
+        main {
+            width: 600px;
+            height: 300px;
+            margin-top: 4rem;
+            margin-left: auto;
+            margin-right: auto;
+            /* position: relative; */
+            text-align: right;
+        }
+
+        #mainPicture {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .main-picture-slide-in {
+            width: 0;
+            height: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            background-color: aquamarine;
+            transition: width 1s;
+        }
+
+        .main-picture-slided {
+            width: 100%;
+        }
+
+        #dots {
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            /* position: inherit; */
+        }
+
+        .aDot {
+            width: 20px;
+            height: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            background-color: white;
+            border: 1px solid white;
+            display: inline-block;
+        }
+
+        #currentDot {
+            background-color: red;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <main>
+        <div id="mainPicture"><div class="main-picture-slide-in"></div></div>
+        <div id="dots">
+            <div class="aDot" id="currentDot"></div>
+            <div class="aDot"></div>
+            <div class="aDot"></div>
+            <div class="aDot"></div>
+            <div class="aDot"></div>
+            <div class="aDot"></div>
+            <div class="aDot"></div>
+        </div>
+    </main>
+    <script>
+        const COLORS = ["aquamarine", "green", "blue", "yellow", "white", "#4599bb", "#77cc29"];
+        const MAIN_FIELD = document.querySelector("main");
+        const MAIN_PICTURE_COLOR = document.querySelector("#mainPicture");
+        const DOTS = document.querySelectorAll(".aDot");
+
+        let rotate;
+        function startProgress(colDotNumber) {
+            rotate = setInterval(() => {
+                if (colDotNumber == DOTS.length) {
+                    colDotNumber = 0;
+                };
+                let newPict = document.querySelector(".main-picture-slide-in")
+                if(newPict != undefined){
+                    newPict.classList.add("main-picture-slided");
+                }
+                moveAhead(colDotNumber++);
+                let newSlide = createMainPicture(colDotNumber);0
+                
+            }, 2000);
+        }
+
+        function moveAhead(coloredDotNumber) {
+            document.querySelector("#currentDot").removeAttribute("id");
+            DOTS[coloredDotNumber].setAttribute("id", "currentDot");
+            // newSlide.classList.add("main-picture-slided");
+            // MAIN_PICTURE_COLOR.style.backgroundColor = COLORS[coloredDotNumber];
+            // MAIN_PICTURE_COLOR.classList.add("fade-in");
+            // MAIN_PICTURE_COLOR.classList.add("fade-in-ed");
+        }
+        // MAIN_PICTURE_COLOR.addEventListener("transitionend", function () { this.classList.remove("fade-in-ed") });
+
+        DOTS.forEach((dot, indx) => {
+            dot.addEventListener("mouseenter", () => { dot.style.backgroundColor = COLORS[indx] });
+            dot.addEventListener("mouseout", () => { dot.removeAttribute("style") })
+            dot.addEventListener("click", () => {
+                clearInterval(rotate);
+                moveAhead(indx);
+                startProgress(++indx)
+            })
+        });
+        startProgress(0);
+
+        function createMainPicture(colDotNumber){
+            let newMainPicture = document.createElement("div");
+            newMainPicture.classList.add("main-picture-slide-in");
+            newMainPicture.style.backgroundColor = COLORS[colDotNumber];
+            newMainPicture.addEventListener("transitionend", function(){console.log("aha" + this.previousSibling)});
+            MAIN_PICTURE_COLOR.appendChild(newMainPicture);
+            return newMainPicture;
+        }
+        // MAIN_PICTURE_COLOR.classList.add("fade-in-ed");
+
+    </script>
+</body>
+
+</html>
