@@ -7,11 +7,15 @@ public class BarCombinationGen {
 
 	final int MAX_VALUE = 131070;
 
+	private float module;
 	private float codeWidth;
 	private float codeHeight = 8.0f;
 	private List<Bar> barsCombination;
 
 	public BarCombinationGen(int codeValue, CodeType codeType) {
+
+		this.module = codeType.getModule();
+
 		this.barsCombination = new ArrayList<Bar>();
 
 		if (codeValue <= MAX_VALUE) {
@@ -29,12 +33,16 @@ public class BarCombinationGen {
 				}
 				this.codeWidth += bar.getWidth();
 				if (i < numberOfBars - 1) {
-					this.codeWidth += bar.getModule();
+					this.codeWidth += this.module;
 				}
 				this.barsCombination.add(bar);
 
 			}
 		}
+	}
+
+	public float getModule() {
+		return this.module;
 	}
 
 	public float getCodeWidth() {
