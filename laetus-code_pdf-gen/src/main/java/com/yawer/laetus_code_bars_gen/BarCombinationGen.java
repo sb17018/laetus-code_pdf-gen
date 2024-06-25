@@ -50,7 +50,7 @@ public class BarCombinationGen {
 	}
 
 	public float getCodeHeight() {
-		return this.codeWidth;
+		return this.codeHeight;
 	}
 
 	public List<Bar> getBarsCombination() {

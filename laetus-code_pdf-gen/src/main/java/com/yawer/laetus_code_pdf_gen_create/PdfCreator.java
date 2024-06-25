@@ -29,7 +29,7 @@ public class PdfCreator {
 	public static void createPdf(int codeValue, CodeType codeType)
 			throws IOException, DocumentException, InterruptedException {
 
-		File file = new File("src/main/resources/pdfs/Pharmacode_" + codeValue + ".pdf");
+		File file = new File("src/main/resources/pdfs/Pharmacode_" + codeValue + "_" + codeType + ".pdf");
 
 		if (!file.exists()) {
 
@@ -40,7 +40,7 @@ public class PdfCreator {
 			document.setPageSize(pageSize);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(document,
-					new FileOutputStream("src/main/resources/pdfs/Pharmacode_" + codeValue + ".pdf"));
+					new FileOutputStream("src/main/resources/pdfs/Pharmacode_" + codeValue + "_" + codeType + ".pdf"));
 
 			document.open();
 
@@ -101,7 +101,8 @@ public class PdfCreator {
 
 		// credits to https://stackoverflow.com/users/1300472/amit
 		Process pr = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file);
-		pr.waitFor();
-		file.delete();
+		
+		// by Piotr Bar
+		if(pr.exitValue() == 0)file.delete();
 	}
 }
