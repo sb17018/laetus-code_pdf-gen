@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 public class LaetusCodeController {
 
-	@GetMapping("/code")
+	@GetMapping("/hello")
 	public String hello() {
 		return "Hello Word!";
 	}
