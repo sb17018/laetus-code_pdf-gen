@@ -24,33 +24,34 @@ public class PdfCreator {
 	
 	private final int CODE_VALUE;
 	private final CodeType CODE_TYPE;
-	private String filePath;
+	private final String FILE_PATH;
 
 	private final static float UNIT_CONVERTER = 2.8346456692913385826771653543307f; // 1mm / (1/72) inch
 	
 	public PdfCreator(int codeValue, CodeType codeType) {
 		this.CODE_VALUE = codeValue;
 		this.CODE_TYPE = codeType;
-		this.filePath = "src/main/resources/pdfs/Pharmacode_" + codeValue + "_" + codeType + ".pdf";
+		this.FILE_PATH = "src/main/resources/pdfs/Pharmacode_" + codeValue + "_" + codeType + ".pdf";
 	}
 
 	public File createPdf()
 			throws IOException, DocumentException, InterruptedException {
 
-		File file = new File(this.filePath);
+		File file = new File(this.FILE_PATH);
 
 		if (!file.exists()) {
 
 			Document document = new Document();
-			int pageWidth = 105;
-			int pageHeight = 148;
-			Rectangle pageSize = new Rectangle(pageWidth * UNIT_CONVERTER, pageHeight * UNIT_CONVERTER);
+			final int PAGE_WIDTH = 105;
+			final int PAGE_HEIGHT = 148;
+			Rectangle pageSize = new Rectangle(PAGE_WIDTH * UNIT_CONVERTER, PAGE_HEIGHT * UNIT_CONVERTER);
 			document.setPageSize(pageSize);
 
-			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(this.filePath));
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(this.FILE_PATH));
 
 			document.open();
 
+			// line separating header from body
 			LineSeparator ls = new LineSeparator(1.0f, 110.0f, BaseColor.BLACK, 100, -20.0f);
 			document.add(new Chunk(ls));
 
@@ -61,20 +62,25 @@ public class PdfCreator {
 
 			// adding bars combinations
 			BarCombinationGen barsCombGen = new BarCombinationGen(this.CODE_VALUE, this.CODE_TYPE);
-			List<Bar> barsComb = barsCombGen.getBarsCombination();
-			float x = (pageWidth - barsCombGen.getCodeWidth()) * UNIT_CONVERTER / 2;
-			float y = (pageHeight - barsCombGen.getCodeHeight()) * UNIT_CONVERTER / 2 - 20;
+			
+			// setting constant values of bars
+			final List<Bar> BARS_COMB = barsCombGen.getBarsCombination();
+			final float BAR_HEIGHT = barsCombGen.getCodeHeight() * UNIT_CONVERTER;
+			final float MODULE = barsCombGen.getModule() * UNIT_CONVERTER;
+			final float BAR_COORD_Y = (PAGE_HEIGHT - barsCombGen.getCodeHeight()) * UNIT_CONVERTER / 2 - 20;
+			
+			// setting variables values of bars
+			float bar_coors_x = (PAGE_WIDTH - barsCombGen.getCodeWidth()) * UNIT_CONVERTER / 2;
 			float barWidth;
-			float barHeight = barsCombGen.getCodeHeight() * UNIT_CONVERTER;
-			float module = barsCombGen.getModule() * UNIT_CONVERTER;
-			for (Bar b : barsComb) {
+			for (Bar b : BARS_COMB) {
 				barWidth = b.getWidth() * UNIT_CONVERTER;
-				cb.rectangle(x, y, barWidth, barHeight);
-				x = x + barWidth + module;
+				cb.rectangle(bar_coors_x, BAR_COORD_Y, barWidth, BAR_HEIGHT);
+				bar_coors_x += (barWidth + MODULE);
 			}
 
 			cb.fill();
 
+			// setting header of PDF
 			int fontSize = 12;
 			BaseFont bf = BaseFont.createFont("src/main/resources/fonts/Roboto-Black.ttf", BaseFont.WINANSI,
 					BaseFont.EMBEDDED);
@@ -84,20 +90,22 @@ public class PdfCreator {
 			cb.showText("Pharmacode:");
 			cb.endText();
 
+			// setting name of type of the barcode
 			fontSize = 18;
 			cb.beginText();
 			cb.setFontAndSize(bf, fontSize);
 			String codeTypeFormatted = this.CODE_TYPE.name();
-			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(codeTypeFormatted, fontSize)) / 2, 270);
+			cb.moveText((PAGE_WIDTH * UNIT_CONVERTER - bf.getWidthPoint(codeTypeFormatted, fontSize)) / 2, 270);
 			cb.showText(codeTypeFormatted);
 			cb.endText();
 
+			// setting numerical value of the barcode
 			fontSize = 36;
 			BaseFont bfb = BaseFont.createFont("src/main/resources/fonts/Roboto-Bold.ttf", BaseFont.WINANSI,
 					BaseFont.EMBEDDED);
 			cb.beginText();
 			cb.setFontAndSize(bfb, fontSize);
-			cb.moveText((pageWidth * UNIT_CONVERTER - bf.getWidthPoint(String.valueOf(this.CODE_VALUE), fontSize)) / 2, 70);
+			cb.moveText((PAGE_WIDTH * UNIT_CONVERTER - bf.getWidthPoint(String.valueOf(this.CODE_VALUE), fontSize)) / 2, 70);
 			cb.showText(String.valueOf(this.CODE_VALUE));
 			cb.endText();
 
