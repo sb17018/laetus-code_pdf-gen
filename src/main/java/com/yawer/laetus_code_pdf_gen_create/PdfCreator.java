@@ -109,6 +109,7 @@ public class PdfCreator {
 			cb.showText(String.valueOf(this.CODE_VALUE));
 			cb.endText();
 
+			System.out.println(file);
 			cb.restoreState();
 
 			document.close();

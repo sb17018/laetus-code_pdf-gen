@@ -2,6 +2,7 @@ package com.yawer.laetus_code_pdf_gen;
 
 import java.io.IOException;
 
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,9 +38,11 @@ public class LaetusCodeController {
 		    
 		    // Here you have to set the actual filename of your pdf
 		    String filename = "Pharmacode_" + codeNumber + "_" + codeType + ".pdf";
-		    headers.setContentDispositionFormData("filename", filename);
 		    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+		    ContentDisposition cd = ContentDisposition.parse(filename);
+		    headers.setContentDisposition(cd);
 		    ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+			System.out.println(contents.length);
 		    return response;
 
 	}

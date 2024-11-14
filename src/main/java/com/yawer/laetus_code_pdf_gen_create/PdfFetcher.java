@@ -24,6 +24,8 @@ public class PdfFetcher {
 		Path pdfPath = Paths.get(fileSource);
 		byte[] pdfData = Files.readAllBytes(pdfPath);
 		
+
+		
 		file.delete();
 		
 		return pdfData;
